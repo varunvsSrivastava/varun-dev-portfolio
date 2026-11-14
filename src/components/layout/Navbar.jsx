@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FiMenu, FiX, FiArrowUpRight } from 'react-icons/fi'
+import { FiMenu, FiX, FiArrowUpRight, FiChevronDown } from 'react-icons/fi'
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -14,26 +14,20 @@ const navLinks = [
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [resumeOpen, setResumeOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
-  // Navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
     }
 
     handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Active navigation section
   useEffect(() => {
     const sections = navLinks
       .map((link) => document.querySelector(link.href))
@@ -47,9 +41,7 @@ function Navbar() {
           }
         })
       },
-      {
-        rootMargin: '-30% 0px -60% 0px',
-      },
+      { rootMargin: '-30% 0px -60% 0px' },
     )
 
     sections.forEach((section) => observer.observe(section))
@@ -57,11 +49,11 @@ function Navbar() {
     return () => observer.disconnect()
   }, [])
 
-  // Close mobile menu on Escape
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setMenuOpen(false)
+        setResumeOpen(false)
       }
     }
 
@@ -71,6 +63,29 @@ function Navbar() {
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
+
+  const resumeActions = (
+    <>
+      <a
+        href="/resume.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => setResumeOpen(false)}
+        className="block rounded-lg px-4 py-3 text-sm text-text-muted transition-colors hover:bg-white/5 hover:text-text-primary"
+      >
+        View Resume
+      </a>
+
+      <a
+        href="/resume.pdf"
+        download="Varun_Srivastava_Resume.pdf"
+        onClick={() => setResumeOpen(false)}
+        className="block rounded-lg px-4 py-3 text-sm text-text-muted transition-colors hover:bg-white/5 hover:text-text-primary"
+      >
+        Download Resume
+      </a>
+    </>
+  )
 
   return (
     <>
@@ -82,7 +97,6 @@ function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
-          {/* Brand */}
           <a
             href="#home"
             onClick={closeMenu}
@@ -97,7 +111,6 @@ function Navbar() {
             </span>
           </a>
 
-          {/* Desktop Navigation */}
           <div className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => {
               const sectionId = link.href.replace('#', '')
@@ -131,18 +144,36 @@ function Navbar() {
             })}
           </div>
 
-          {/* Resume CTA */}
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full border border-primary/40 px-4 py-2 text-sm font-medium text-primary-light transition-all hover:border-primary hover:bg-primary/10 md:flex"
-          >
-            Resume
-            <FiArrowUpRight size={14} />
-          </a>
+          {/* Resume Dropdown */}
+          <div className="relative hidden md:block">
+            <button
+              type="button"
+              aria-expanded={resumeOpen}
+              onClick={() => setResumeOpen((prev) => !prev)}
+              className="flex items-center gap-2 rounded-full border border-primary/40 px-4 py-2 text-sm font-medium text-primary-light transition-all hover:border-primary hover:bg-primary/10"
+            >
+              Resume
+              <FiChevronDown
+                size={14}
+                className={`transition-transform ${resumeOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
 
-          {/* Mobile Menu Button */}
+            <AnimatePresence>
+              {resumeOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute right-0 mt-3 w-48 rounded-xl border border-white/10 bg-surface/95 p-2 shadow-xl backdrop-blur-xl"
+                >
+                  {resumeActions}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <button
             type="button"
             aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -159,7 +190,6 @@ function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop */}
             <motion.button
               type="button"
               aria-label="Close navigation menu"
@@ -170,7 +200,6 @@ function Navbar() {
               className="fixed inset-0 z-40 cursor-default bg-black/60 backdrop-blur-sm md:hidden"
             />
 
-            {/* Menu Panel */}
             <motion.div
               initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -202,16 +231,13 @@ function Navbar() {
                   )
                 })}
 
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={closeMenu}
-                  className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-violet-500 px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                >
-                  Download Resume
-                  <FiArrowUpRight size={16} />
-                </a>
+                <div className="mt-2 border-t border-white/10 pt-2">
+                  <p className="px-4 py-2 text-xs font-medium uppercase tracking-wider text-text-muted">
+                    Resume
+                  </p>
+
+                  {resumeActions}
+                </div>
               </div>
             </motion.div>
           </>
