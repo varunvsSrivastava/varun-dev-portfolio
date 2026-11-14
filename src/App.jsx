@@ -1,28 +1,45 @@
+
+import Navbar from './components/layout/Navbar'
+import Hero from './components/layout/Hero'
+
+import About from './components/sections/About'
+import Skills from './components/sections/Skills'
+import Projects from './components/sections/Projects'
+
+import Section from './components/common/Section'
+import Container from './components/common/Container'
+import SectionHeading from './components/common/SectionHeading'
+import Experience from './components/sections/Experience'
+import Contact from './components/sections/Contact'
+import BackgroundEffects from './components/common/BackgroundEffects'
+import ScrollProgress from './components/common/ScrollProgress'
+
 function App() {
   return (
-    <main className="min-h-screen bg-[#08080c] text-white">
-      <div className="flex min-h-screen items-center justify-center px-6">
-        <div className="text-center">
-          <p className="mb-4 text-sm font-medium tracking-[0.3em] text-violet-400 uppercase">
-            Software Engineer · ML Engineer
-          </p>
+    <main className="relative isolate min-h-screen bg-background text-text-primary">
+      <BackgroundEffects />
+      <ScrollProgress />
+      {/* NAVBAR */}
+      <Navbar />
 
-          <h1 className="text-5xl font-bold tracking-tight sm:text-7xl">
-            Varun<span className="text-violet-400">.dev</span>
-          </h1>
+      {/* HERO */}
+      <Hero />
 
-          <p className="mx-auto mt-6 max-w-xl text-lg text-gray-400">
-            Building intelligent applications through software engineering
-            and machine learning.
-          </p>
+      {/* ABOUT */}
+      <About />
 
-          <div className="mt-8">
-            <span className="inline-flex items-center rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-sm text-violet-300">
-              Portfolio Under Development
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* SKILLS */}
+      <Skills />
+
+      {/* PROJECTS */}
+      <Projects />
+
+      {/* EXPERIENCE PLACEHOLDER */}
+      <Experience />
+
+      {/* CONTACT PLACEHOLDER */}
+      <Contact />
+
     </main>
   )
 }
