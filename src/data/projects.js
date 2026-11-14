@@ -58,7 +58,7 @@ export const projects = [
       'Academic Search',
     ],
 
-    github: null,
+    github: 'https://github.com/varunvsSrivastava/ResearchPilot.git',
     demo: null,
   },
 
@@ -116,7 +116,7 @@ export const projects = [
       'Node.js',
     ],
 
-    github: null,
+    github: 'https://github.com/varunvsSrivastava/PLANHUB.git',
     demo: null,
   },
 ]
